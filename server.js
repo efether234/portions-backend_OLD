@@ -1,11 +1,13 @@
 require('dotenv').config()
+const express = require('express')
 const mongoose = require('mongoose')
 const date = require('date-and-time')
-const express = require('express')
+const cors = require('cors')
 
 mongoose.connect('mongodb://localhost:27017/portions')
 const app = express()
 app.use(express.json())
+app.use(cors())
 
 defaultDate = new Date()
 
