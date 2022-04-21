@@ -15,8 +15,7 @@ defaultDate = new Date()
 
 const portionSchema = new mongoose.Schema({
     category: String,
-    date: { type: Date, default: defaultDate },
-    dateString: { type: String, default: date.format(defaultDate, 'YYYY-MM-DD', true) }
+    date: { type: Date, default: new Date() },
 })
 
 const Portion = mongoose.model('Portion', portionSchema)
@@ -29,10 +28,17 @@ app.get('/api/portions', (req, res) => {
     })
 })
 
-// GET call including params 'cat' and 'date' should return all portions of cat logged on date
+// GET call including params 'date' and 'cat' should return all portions of cat logged on date
+// Date format must be YYYY-MM-DD
 
-app.get('/api/portions/:cat&:date', (req, res) => {
-    Portion.find({ category: req.params.cat, dateString: req.params.date }, (err, portions) => {
+app.get('/api/portions/:date/:cat', (req, res) => {
+    Portion.find({
+        date: {
+            $gt: new Date(req.params.date),
+            $lt: new Date(tomorrow(req.params.date))
+        },
+        category: req.params.cat
+    }, (err, portions) => {
         res.send(portions)
     })
 })
@@ -43,7 +49,7 @@ app.post('/api/portions', (req, res) => {
     const portion = new Portion({
         category: req.body.category
     })
-    portion.save
+    portion.save()
     res.send(portion)
 })
 
@@ -55,6 +61,21 @@ app.delete('/api/portions/:cat', (req, res) => {
     })
     res.status(200).send('Succesfully deleted')
 })
+
+const tomorrow = (input) => {
+    // Convert the YYYY-MM-DD string to a JS Date object
+    let date = new Date(input)
+
+    // Add one day to the Date object
+    date.setDate(date.getDate() + 1)
+
+    // Break down incremented date object into YYYY-MM-DD string and return it
+    const yyyy = String(date.getUTCFullYear())
+    const mm = String(date.getUTCMonth() + 1).padStart(2, '0')
+    const dd = String(date.getUTCDate()).padStart(2, '0')
+
+    return `${yyyy}-${mm}-${dd}`
+}
 
 // Start the app
 
