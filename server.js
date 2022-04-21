@@ -28,16 +28,15 @@ app.get('/api/portions', (req, res) => {
     })
 })
 
-// GET call including params 'date' and 'cat' should return all portions of cat logged on date
+// GET call including params 'date' ashould return all portions logged on date
 // Date format must be YYYY-MM-DD
 
-app.get('/api/portions/:date/:cat', (req, res) => {
+app.get('/api/portions/:date', (req, res) => {
     Portion.find({
         date: {
             $gt: new Date(req.params.date),
             $lt: new Date(tomorrow(req.params.date))
         },
-        category: req.params.cat
     }, (err, portions) => {
         res.send(portions)
     })
