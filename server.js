@@ -9,13 +9,11 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-defaultDate = new Date()
-
 // Define the schema and model
 
 const portionSchema = new mongoose.Schema({
     category: String,
-    date: { type: Date, default: new Date() },
+    date: { type: Date, default: Date.now() },
 })
 
 const Portion = mongoose.model('Portion', portionSchema)
@@ -28,7 +26,7 @@ app.get('/api/portions', (req, res) => {
     })
 })
 
-// GET call including params 'date' ashould return all portions logged on date
+// GET call including params 'date' should return all portions logged on date
 // Date format must be YYYY-MM-DD
 
 app.get('/api/portions/:date', (req, res) => {
@@ -46,7 +44,8 @@ app.get('/api/portions/:date', (req, res) => {
 
 app.post('/api/portions', (req, res) => {
     const portion = new Portion({
-        category: req.body.category
+        category: req.body.category,
+        date: Date.now()
     })
     portion.save()
     res.send(portion)
