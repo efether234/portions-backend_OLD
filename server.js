@@ -1,13 +1,15 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
-const date = require('date-and-time')
+// const date = require('date-and-time')
+const helmet = require('helmet')
 const cors = require('cors')
 
 mongoose.connect('mongodb://localhost:27017/portions')
 const app = express()
-app.use(express.json())
+
 app.use(cors())
+app.use(express.json())
 
 // Define the schema and model
 
