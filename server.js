@@ -4,11 +4,15 @@ const mongoose = require('mongoose')
 // const date = require('date-and-time')
 const helmet = require('helmet')
 const cors = require('cors')
+const req = require('express/lib/request')
+const res = require('express/lib/response')
 
-mongoose.connect('mongodb://localhost:27017/portions')
+mongoose.connect(process.env.DB_URI + '/portions')
 const app = express()
 
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:3000'
+}))
 app.use(express.json())
 
 // Define the schema and model
