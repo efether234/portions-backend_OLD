@@ -4,6 +4,7 @@ const dbDebug = require('debug')('app:db')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const portions = require('./routes/portions')
+const users = require('./routes/users')
 const helmet = require('helmet')
 const cors = require('cors')
 const express = require('express')
@@ -27,6 +28,7 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use('/api/portions', portions)
+app.use('/api/users', users)
 
 // Start the app
 

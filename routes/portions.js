@@ -40,7 +40,6 @@ router.post('/', (req, res) => {
         date: Date.now()
     })
     portion.save()
-    debug(portion)
     res.send(portion)
 })
 
