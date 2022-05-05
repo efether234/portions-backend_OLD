@@ -20,6 +20,11 @@ const Portion = mongoose.model('Portion', new mongoose.Schema({
         type: Date,
         required: true,
         default: Date.now()
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 }))
 
