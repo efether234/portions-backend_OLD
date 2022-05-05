@@ -1,3 +1,4 @@
+const auth = require('../middleware/auth.js')
 const { Portion, validate } = require('../models/portion')
 const debug = require('debug')('app:db')
 // const mongoose = require('mongoose')
@@ -7,7 +8,7 @@ const router = express.Router()
 
 // GET call to /api/portions should return all portions logged.
 
-router.get('/', (req, res) => {
+router.get('/', auth, (req, res) => {
     Portion.find({}, (err, portions) => {
         res.send(portions)
     })
@@ -16,7 +17,7 @@ router.get('/', (req, res) => {
 // GET call including params 'date' should return all portions logged on date
 // Date format must be YYYY-MM-DD
 
-router.get('/:date', (req, res) => {
+router.get('/:date', auth, (req, res) => {
     Portion.find({
         date: {
             $gt: new Date(req.params.date),
@@ -29,7 +30,7 @@ router.get('/:date', (req, res) => {
 
 // POST call should create new portion with current date
 
-router.post('/', (req, res) => {
+router.post('/', auth, (req, res) => {
     const { error } = validate(req.body)
     if (error) {
         debug(error.details[0].message)
@@ -45,7 +46,7 @@ router.post('/', (req, res) => {
 
 // DELETE call
 
-router.delete('/:cat', (req, res) => {
+router.delete('/:cat', auth, (req, res) => {
     Portion.deleteOne({ category: req.body.cat }, (err) =>{
         if (err) res.status(400).send('error')
     })
