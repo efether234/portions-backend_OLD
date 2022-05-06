@@ -1,20 +1,14 @@
-const auth = require('../middleware/auth.js')
+const auth = require('../middleware/auth')
 const { Portion, validate } = require('../models/portion')
 const debug = require('debug')('app:db')
-// const mongoose = require('mongoose')
 const express = require('express')
 
 const router = express.Router()
 
-// GET call to /api/portions should return all portions logged.
-
-router.get('/', auth, (req, res) => {
-    Portion.find({ user: req.user._id }, (err, portions) => {
-        res.send(portions)
-    })
+router.get('/', auth, async (req, res) => {
+    const portions = await Portion.find({ user: req.user._id })
+    res.send(portions)
 })
-
-// POST call should create new portion with current date
 
 router.post('/', auth, (req, res) => {
     const { error } = validate(req.body)
@@ -30,8 +24,6 @@ router.post('/', auth, (req, res) => {
     portion.save()
     res.send(portion)
 })
-
-// DELETE call
 
 router.delete('/:cat', auth, (req, res) => {
     Portion.findOneAndDelete(
